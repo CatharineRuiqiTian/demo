@@ -12,11 +12,11 @@ BMEN 6000 - Signal Processing for Medical Devices 2025
 
 // Input parameters
 
-float R1 = ;
-float R2 = ;
-float R3 = ;
-float inVoltage = ;
-float sampRate = ;
+float R1 = 10000;
+float R2 = 10000;
+float R3 = 10000;
+float inVoltage = 3.3;
+float sampRate = 1;
 
 // DAQ variables
 
@@ -28,15 +28,15 @@ int V2;
 float Vdiff;
 float resistance;
 float logR;
-float SHa = ;
-float SHb = ;
-float SHc = ;
+float SHa = 0.001129104;
+float SHb = 0.000234276;
+float SHc = 8.81008E-08;
 float temp;
 
 // Moving average variables
 
-int i;
-const int buffsize = ;
+int i = 0;
+const int buffsize = 10;
 float tempBuff[buffsize];
 float sumTemp = 0;
 float avgTemp;
@@ -87,21 +87,28 @@ void loop() {
   // Calculate difference between nodes (equivalent to voltage across bridge)
   // 3 pts
 
+  Vdiff = (V1 - V2) / (pow(2,10) - 1) * inVoltage;
 
   // Calculate resistance from voltage
   // 7 pts
 
-
+  resistance = (R2 * inVoltage - (R1 + R2) * Vdiff) * R3 / (R1 * inVoltage + (R1 + R2) * Vdiff);
 
   // Calculate temperature from resistance
   // 10 pts
 
-
+  logR = log(resistance);
+  temp = 1 / (SHa + SHb * logR + SHc * powf(logR, 3)) - 273.15;
 
   // Moving average
   // 10 pts
 
-
+  sumTemp = sumTemp - tempBuff[i];
+  tempBuff[i] = temp;
+  sumTemp = sumTemp + tempBuff[i];
+  i++;
+  i %= buffsize;
+  avgTemp = sumTemp / buffsize;
 
   // Output (Serial.print prints to the serial monitor; tempRecord.print prints to the SD card)
 
@@ -142,8 +149,11 @@ void loop() {
   
   // Implement sampling rate: 5 pts
 
-  delay();  
-
+  delay(1000);  
+  // sampling rate is 1Hz (1 sample per second), equivalent to 1 second between samples
+  // delay is the time in miliseconds between each sample
+  // 1s = 1000ms
+  // 1 * 1000ms/1s = 1000
 }
 
 
