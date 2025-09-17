@@ -55,22 +55,22 @@ void setup() {
 
   //Uncomment to use SD card
 
-  // SD.begin(chipSelect);
-  // if (!SD.begin(chipSelect)) {
-  //   Serial.println("SD not found ");
-  //   return;
-  // }
-  // Serial.println("SD found");
+   SD.begin(chipSelect);
+  if (!SD.begin(chipSelect)) {
+    Serial.println("SD not found ");
+    return;
+  }
+  Serial.println("SD found");
 
-  // tempRecord = SD.open("tempLog.txt", FILE_WRITE);
-  // if (tempRecord){
-  // tempRecord.println("Voltage (1)  Voltage (2)  Voltage (diff)  Resistance  Temp (C)  Average temp (C)");
-  // tempRecord.close();
-  // }
-  // else {
-  //   Serial.println("error opening tempRecord.txt");
-  //   return;
-  // }
+  tempRecord = SD.open("tempLog.txt", FILE_WRITE);
+  if (tempRecord) {
+    tempRecord.println("Voltage (1)  Voltage (2)  Voltage (diff)  Resistance  Temp (C)  Average temp (C)");
+    tempRecord.close();
+  }
+  else {
+    Serial.println("error opening tempRecord.txt");
+    return;
+  }
 
   pinMode(A1, INPUT);
   pinMode(A2, INPUT);
@@ -126,26 +126,26 @@ void loop() {
 
   // Uncomment to use SD card
   
-  // tempRecord = SD.open("tempLog.txt", FILE_WRITE);
+   tempRecord = SD.open("tempLog.txt", FILE_WRITE);
   
-  // if (tempRecord) {
-  //   tempRecord.print(V1);
-  //   tempRecord.print("\t");
-  //   tempRecord.print(V2);
-  //   tempRecord.print("\t");
-  //   tempRecord.print(Vdiff);
-  //   tempRecord.print("\t");
-  //   tempRecord.print(resistance);
-  //   tempRecord.print("\t");
-  //   tempRecord.print(temp);
-  //   tempRecord.print("\t");
-  //   tempRecord.println(avgTemp);
-  //   tempRecord.close();
-  // }
-  // else {
-  //   Serial.println("error opening tempLog.txt");
-  //   return;
-  // }
+   if (tempRecord) {
+     tempRecord.print(V1);
+     tempRecord.print("\t");
+     tempRecord.print(V2);
+     tempRecord.print("\t");
+     tempRecord.print(Vdiff);
+     tempRecord.print("\t");
+     tempRecord.print(resistance);
+     tempRecord.print("\t");
+     tempRecord.print(temp);
+     tempRecord.print("\t");
+     tempRecord.println(avgTemp);
+     tempRecord.close();
+   }
+   else {
+     Serial.println("error opening tempLog.txt");
+     return;
+   }
   
   // Implement sampling rate: 5 pts
 
